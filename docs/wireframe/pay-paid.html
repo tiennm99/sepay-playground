@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SePay Playground — Paid</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: { extend: {
+    colors: { bg:'#FAFAFA', surface:'#FFFFFF', border:'#E5E5E5', ink:'#0A0A0A', muted:'#737373',
+      accent:'#4F46E5', accentHover:'#4338CA', success:'#16A34A', warning:'#D97706', danger:'#DC2626' },
+    fontFamily: { sans:['Inter','system-ui','sans-serif'], mono:['"JetBrains Mono"','ui-monospace','monospace'] },
+    borderRadius: { DEFAULT:'4px', md:'4px', lg:'4px' }
+  }}
+}
+</script>
+<style>body{font-family:'Inter',system-ui,sans-serif}</style>
+</head>
+<body class="bg-bg text-ink min-h-screen antialiased">
+  <header class="border-b border-border">
+    <div class="max-w-[480px] mx-auto px-4 md:px-6 h-12 flex items-center justify-between">
+      <a href="/" class="font-mono text-[14px] font-medium tracking-tight">sepay/<span class="text-muted">playground</span></a>
+      <span class="font-mono text-[12px] text-muted">/pay</span>
+    </div>
+  </header>
+
+  <main class="max-w-[480px] mx-auto px-4 md:px-6 pt-12 pb-16">
+    <p class="font-mono text-[12px] text-muted mb-2">step 3 of 3 · settled</p>
+    <h1 class="text-[20px] font-semibold tracking-tight mb-6">Payment received</h1>
+
+    <!-- Confirmation card -->
+    <div class="bg-surface border border-border rounded p-6">
+      <!-- Status + checkmark -->
+      <div class="flex items-center justify-between mb-6">
+        <span class="inline-flex items-center gap-1.5 h-5 px-2 rounded text-[12px] font-medium font-mono bg-success/10 text-success">
+          <span class="w-1.5 h-1.5 rounded-full bg-success"></span>paid
+        </span>
+        <div class="w-10 h-10 rounded-full bg-success/10 grid place-items-center" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        </div>
+      </div>
+
+      <!-- Big amount -->
+      <div class="mb-6 pb-6 border-b border-border">
+        <p class="text-[12px] uppercase tracking-wide text-muted mb-1">Amount paid</p>
+        <p class="font-mono text-[30px] leading-none text-ink tabular-nums">10,000 <span class="text-[16px] text-muted">VND</span></p>
+      </div>
+
+      <!-- Receipt meta -->
+      <dl class="grid grid-cols-3 gap-x-4 gap-y-3 text-[14px]">
+        <dt class="col-span-1 text-[12px] uppercase tracking-wide text-muted">Order</dt>
+        <dd class="col-span-2 font-mono text-ink">SEPAY-7K3QX9</dd>
+
+        <dt class="col-span-1 text-[12px] uppercase tracking-wide text-muted">Paid at</dt>
+        <dd class="col-span-2 font-mono text-ink">2026-05-24 14:32:08 +07</dd>
+
+        <dt class="col-span-1 text-[12px] uppercase tracking-wide text-muted">Txn ref</dt>
+        <dd class="col-span-2 font-mono text-muted">FT26B5240008291</dd>
+      </dl>
+    </div>
+
+    <!-- CTA -->
+    <a href="/pay"
+       class="mt-6 inline-flex w-full sm:w-auto items-center justify-center h-10 px-4 bg-accent hover:bg-accentHover text-white text-[14px] font-medium rounded transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+      Start another
+      <span aria-hidden="true" class="ml-2 font-mono">→</span>
+    </a>
+
+    <p class="mt-4 font-mono text-[12px] text-muted">// webhook received · order marked paid · ready</p>
+  </main>
+</body>
+</html>

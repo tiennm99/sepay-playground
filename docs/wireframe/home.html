@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SePay Playground — Home</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: { extend: {
+    colors: {
+      bg:'#FAFAFA', surface:'#FFFFFF', border:'#E5E5E5',
+      ink:'#0A0A0A', muted:'#737373',
+      accent:'#4F46E5', accentHover:'#4338CA',
+      success:'#16A34A', warning:'#D97706', danger:'#DC2626'
+    },
+    fontFamily: { sans:['Inter','system-ui','sans-serif'], mono:['"JetBrains Mono"','ui-monospace','monospace'] },
+    borderRadius: { DEFAULT:'4px', md:'4px', lg:'4px' }
+  }}
+}
+</script>
+<style>body{font-family:'Inter',system-ui,sans-serif}</style>
+</head>
+<body class="bg-bg text-ink min-h-screen antialiased">
+  <!-- Top bar: minimal brand label, mono code-style -->
+  <header class="border-b border-border">
+    <div class="max-w-[560px] mx-auto px-4 md:px-6 h-12 flex items-center justify-between">
+      <span class="font-mono text-[14px] font-medium tracking-tight">sepay/<span class="text-muted">playground</span></span>
+      <span class="font-mono text-[12px] text-muted">v0.1</span>
+    </div>
+  </header>
+
+  <!-- Hero: one line + single CTA + tiny what-this-is paragraph -->
+  <main class="max-w-[560px] mx-auto px-4 md:px-6 pt-16 md:pt-24 pb-16">
+    <p class="font-mono text-[12px] text-muted mb-4">// vietqr · sepay webhook · demo</p>
+
+    <h1 class="text-[30px] leading-[1.2] font-semibold tracking-tight mb-8">
+      Generate a VietQR, get paid, get a webhook.
+    </h1>
+
+    <a href="/pay"
+       class="inline-flex items-center justify-center h-10 px-4 bg-accent hover:bg-accentHover text-white text-[14px] font-medium rounded transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+      Start a payment
+      <span aria-hidden="true" class="ml-2 font-mono">→</span>
+    </a>
+
+    <p class="mt-10 text-[14px] leading-[1.6] text-muted max-w-[44ch]">
+      A minimal playground showing the SePay VietQR flow end-to-end: create an order, render the QR, listen for the bank webhook, confirm paid. Built for developers learning the integration.
+    </p>
+  </main>
+
+  <footer class="max-w-[560px] mx-auto px-4 md:px-6 pb-10">
+    <p class="font-mono text-[12px] text-muted">demo only · no real bank transfers triggered from this UI</p>
+  </footer>
+</body>
+</html>

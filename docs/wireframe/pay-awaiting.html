@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SePay Playground — Awaiting payment</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: { extend: {
+    colors: { bg:'#FAFAFA', surface:'#FFFFFF', border:'#E5E5E5', ink:'#0A0A0A', muted:'#737373',
+      accent:'#4F46E5', accentHover:'#4338CA', success:'#16A34A', warning:'#D97706', danger:'#DC2626' },
+    fontFamily: { sans:['Inter','system-ui','sans-serif'], mono:['"JetBrains Mono"','ui-monospace','monospace'] },
+    borderRadius: { DEFAULT:'4px', md:'4px', lg:'4px' }
+  }}
+}
+</script>
+<style>
+  body{font-family:'Inter',system-ui,sans-serif}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .spinner{animation:spin 1.2s linear infinite}
+</style>
+</head>
+<body class="bg-bg text-ink min-h-screen antialiased">
+  <header class="border-b border-border">
+    <div class="max-w-[480px] mx-auto px-4 md:px-6 h-12 flex items-center justify-between">
+      <a href="/" class="font-mono text-[14px] font-medium tracking-tight">sepay/<span class="text-muted">playground</span></a>
+      <span class="font-mono text-[12px] text-muted">/pay</span>
+    </div>
+  </header>
+
+  <main class="max-w-[480px] mx-auto px-4 md:px-6 pt-12 pb-16">
+    <p class="font-mono text-[12px] text-muted mb-2">step 2 of 3 · awaiting payment</p>
+    <h1 class="text-[20px] font-semibold tracking-tight mb-6">Scan with your banking app</h1>
+
+    <!-- Card: QR + meta -->
+    <div class="bg-surface border border-border rounded p-6">
+      <!-- Status row -->
+      <div class="flex items-center justify-between mb-6">
+        <span class="inline-flex items-center gap-1.5 h-5 px-2 rounded text-[12px] font-medium font-mono bg-warning/10 text-warning">
+          <span class="w-1.5 h-1.5 rounded-full bg-warning"></span>pending
+        </span>
+        <span class="inline-flex items-center gap-2 text-[12px] text-muted font-mono">
+          <svg class="spinner" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9" stroke-opacity="0.2"/><path d="M21 12a9 9 0 0 1-9 9"/></svg>
+          waiting…
+        </span>
+      </div>
+
+      <!-- QR placeholder 240x240 -->
+      <div class="mx-auto w-[240px] h-[240px] border border-border rounded grid place-items-center bg-[repeating-conic-gradient(#E5E5E5_0%_25%,#FFFFFF_0%_50%)] bg-[length:24px_24px]">
+        <span class="font-mono text-[12px] text-muted bg-surface px-2 py-1 rounded border border-border">QR 240×240</span>
+      </div>
+
+      <!-- Meta grid -->
+      <dl class="mt-6 grid grid-cols-3 gap-x-4 gap-y-3 text-[14px]">
+        <dt class="col-span-1 text-[12px] uppercase tracking-wide text-muted">Amount</dt>
+        <dd class="col-span-2 font-mono text-ink">10,000 VND</dd>
+
+        <dt class="col-span-1 text-[12px] uppercase tracking-wide text-muted">Order</dt>
+        <dd class="col-span-2 font-mono text-ink">SEPAY-7K3QX9</dd>
+
+        <dt class="col-span-1 text-[12px] uppercase tracking-wide text-muted">Expires</dt>
+        <dd class="col-span-2 font-mono text-muted">in 14:52</dd>
+      </dl>
+    </div>
+
+    <div class="mt-4 flex items-center justify-between">
+      <a href="#" class="text-[12px] text-muted hover:text-danger transition">Cancel / new order</a>
+      <span class="font-mono text-[12px] text-muted">polling every 2s</span>
+    </div>
+  </main>
+</body>
+</html>
