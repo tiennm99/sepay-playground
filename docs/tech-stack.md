@@ -80,15 +80,15 @@ sepay-playground/
 
 ## Env Vars
 
-| Name | Source | Notes |
-|------|--------|-------|
-| `SEPAY_API_TOKEN` | SePay dashboard | Reserved per user spec; unused by current flow |
-| `SEPAY_WEBHOOK_API_KEY` | SePay dashboard | Compared against `Authorization: Apikey <...>` |
-| `SEPAY_ACCOUNT_NUMBER` | SePay-bound bank account | Used in QR URL |
-| `SEPAY_BANK_CODE` | qr.sepay.vn/banks.json | e.g. `MBBank`, `Vietcombank`, `ACB` |
-| `UPSTASH_REDIS_REST_URL` | Upstash console / Vercel integration | |
-| `UPSTASH_REDIS_REST_TOKEN` | Upstash console / Vercel integration | |
-| `SEPAY_ORDER_PREFIX` | local config | Defaults `SEVQR` (VietinBank-compatible) |
+| Name                       | Source                               | Notes                                          |
+| -------------------------- | ------------------------------------ | ---------------------------------------------- |
+| `SEPAY_API_TOKEN`          | SePay dashboard                      | Reserved per user spec; unused by current flow |
+| `SEPAY_WEBHOOK_API_KEY`    | SePay dashboard                      | Compared against `Authorization: Apikey <...>` |
+| `SEPAY_ACCOUNT_NUMBER`     | SePay-bound bank account             | Used in QR URL                                 |
+| `SEPAY_BANK_CODE`          | qr.sepay.vn/banks.json               | e.g. `MBBank`, `Vietcombank`, `ACB`            |
+| `UPSTASH_REDIS_REST_URL`   | Upstash console / Vercel integration |                                                |
+| `UPSTASH_REDIS_REST_TOKEN` | Upstash console / Vercel integration |                                                |
+| `SEPAY_ORDER_PREFIX`       | local config                         | Defaults `SEVQR` (VietinBank-compatible)       |
 
 All loaded via SvelteKit's `$env/static/private` (server-only — never leaks to client).
 

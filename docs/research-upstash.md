@@ -3,6 +3,7 @@
 ## 1. Client Library
 
 **Package**: `@upstash/redis` ✓ Confirmed correct.
+
 - **Latest Version**: 1.38.0 (released 18 May 2026).
 - **Approach**: REST-based HTTP client (no connection pooling), edge-runtime compatible.
 - **Breaking Changes**: No recent breaking changes between v1.x versions; stable for production use.
@@ -11,12 +12,14 @@
 ## 2. Environment Variables
 
 **Canonical names** (when not using Vercel integration):
+
 - `UPSTASH_REDIS_REST_URL` ✓
 - `UPSTASH_REDIS_REST_TOKEN` ✓
 
 `Redis.fromEnv()` reads **both** automatically.
 
 **Vercel-managed alternative** (if using Vercel Marketplace integration):
+
 - `KV_REST_API_URL`
 - `KV_REST_API_TOKEN`
 
@@ -25,6 +28,7 @@ Both sets work with `fromEnv()`; choose one per deployment context.
 ## 3. Edge vs Node Runtime
 
 **Same client runs on both runtimes.** No caveats.
+
 - Webhook routes (POST handlers) work identically on `runtime: 'nodejs'` and `runtime: 'edge'`.
 - REST-based design eliminates connection state issues.
 - Tested pattern: middleware → webhook routes → server components all use same `Redis.fromEnv()` call.
@@ -32,26 +36,35 @@ Both sets work with `fromEnv()`; choose one per deployment context.
 ## 4. Required Patterns
 
 ### SET with TTL (store order)
+
 ```ts
-await redis.set("order:123", { id: 123, total: 99.99 }, { ex: 3600 })
+await redis.set('order:123', { id: 123, total: 99.99 }, { ex: 3600 });
 ```
+
 Returns success boolean. TTL in seconds; auto-expires.
 
 ### GET (retrieve order)
+
 ```ts
-const order = await redis.get("order:123")
+const order = await redis.get('order:123');
 // Auto-deserialized to object
 ```
 
 ### SET NX (idempotent webhook dedup)
+
 ```ts
-const wasSet = await redis.set("webhook:event-uuid", { timestamp: Date.now() }, { nx: true })
-if (wasSet) { /* process event */ }
+const wasSet = await redis.set('webhook:event-uuid', { timestamp: Date.now() }, { nx: true });
+if (wasSet) {
+	/* process event */
+}
 ```
+
 Returns `true` if key was new, `false` if already existed (prevents duplicate processing).
 
 ### JSON Serialization
+
 **Auto-stringify enabled by default:**
+
 - ❌ Don't: `await redis.set("order", JSON.stringify({...}))`
 - ✅ Do: `await redis.set("order", {...})`
 
@@ -60,6 +73,7 @@ SDK handles serialization transparently. No manual stringify needed.
 ## 5. Vercel Integration
 
 **Available since 2024; active as of May 2026.**
+
 - Product name: "Upstash for Vercel" (Upstash Redis)
 - **URL**: vercel.com/marketplace/upstash
 - **Process**:
@@ -74,6 +88,7 @@ SDK handles serialization transparently. No manual stringify needed.
 ## 6. Pricing (Free Tier Suitable for Demo)
 
 **Free Tier** (no credit card):
+
 - **Storage**: 256 MB
 - **Commands/month**: 500,000 (≈16.7K/day)
 - **Bandwidth**: 10 GB/month

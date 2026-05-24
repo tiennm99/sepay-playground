@@ -83,10 +83,7 @@
 			>
 				<span class="h-1.5 w-1.5 rounded-full bg-warning"></span>pending
 			</span>
-			<span
-				role="status"
-				class="inline-flex items-center gap-2 font-mono text-[12px] text-muted"
-			>
+			<span role="status" class="inline-flex items-center gap-2 font-mono text-[12px] text-muted">
 				<svg
 					class="animate-spin"
 					width="14"

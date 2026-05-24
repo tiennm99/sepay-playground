@@ -1,0 +1,10 @@
+# Generated
+.svelte-kit
+build
+.vercel
+.output
+node_modules
+pnpm-lock.yaml
+
+# Wireframes — preserved verbatim from design phase
+docs/wireframe

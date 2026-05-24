@@ -41,9 +41,9 @@
 					aria-invalid={form?.error ? 'true' : undefined}
 					class="h-10 w-full rounded border border-border bg-surface px-3 pr-14 font-mono text-[16px] text-ink placeholder:text-muted/60 focus:border-accent focus:ring-1 focus:ring-accent focus:outline-none"
 				/>
-				<span
-					class="absolute top-1/2 right-3 -translate-y-1/2 font-mono text-[12px] text-muted"
-				>VND</span>
+				<span class="absolute top-1/2 right-3 -translate-y-1/2 font-mono text-[12px] text-muted"
+					>VND</span
+				>
 			</div>
 			{#if form?.error}
 				<p class="mt-2 text-[12px] text-danger" aria-live="polite">{form.error}</p>
@@ -54,7 +54,8 @@
 						type="button"
 						onclick={() => (amount = '10000')}
 						class="font-mono text-ink underline decoration-border underline-offset-2 hover:decoration-accent"
-					>demo amount: 10,000</button>
+						>demo amount: 10,000</button
+					>
 				</p>
 			{/if}
 		</div>

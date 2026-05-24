@@ -5,6 +5,7 @@
 ## What was decided (locked)
 
 ### Stack (see `docs/tech-stack.md`)
+
 - SvelteKit 2 + Svelte 5 (runes) + **JavaScript** (JSDoc for typedefs)
 - **pnpm** (lockfile committed; `packageManager` field)
 - Tailwind v4 + **shadcn-svelte** (button, input, label, card, badge, alert) + `lucide-svelte` + `mode-watcher`
@@ -14,6 +15,7 @@
 - **Dev helper included:** `POST /api/dev/simulate-webhook` gated by `!import.meta.env.PROD`
 
 ### Design (see `docs/design-guidelines.md` + `docs/wireframe/*.html`)
+
 - Technical-minimal style, indigo accent (`#4F46E5` light / `#6366F1` dark)
 - Inter (UI) + JetBrains Mono (codes/amounts)
 - 4px radius, 4-base spacing, 150ms fade transitions, reduced-motion safe
@@ -22,6 +24,7 @@
 - **NOT YET APPROVED BY USER** — design gate was deferred. Re-ask on resume.
 
 ### Research (see `docs/research-*.md`)
+
 - `research-sepay.md` — VietQR endpoint, webhook payload, auth header, order-code extraction, idempotency on `id`
 - `research-upstash.md` — `@upstash/redis` patterns, `nx:true` for dedup, Vercel marketplace integration
 - `research-vercel.md` — Node runtime for webhook, env var setup, ngrok for local

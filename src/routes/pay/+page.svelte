@@ -6,9 +6,7 @@
 
 	let { data, form } = $props();
 
-	const view = $derived(
-		!data.order ? 'form' : data.order.status === 'paid' ? 'paid' : 'awaiting'
-	);
+	const view = $derived(!data.order ? 'form' : data.order.status === 'paid' ? 'paid' : 'awaiting');
 
 	let reduceMotion = $state(false);
 	$effect(() => {

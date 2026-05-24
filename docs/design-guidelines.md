@@ -7,32 +7,34 @@
 ## Color Tokens
 
 ### Light mode
-| Token | Hex | Use |
-|---|---|---|
-| `bg` | `#FAFAFA` | page background |
-| `surface` | `#FFFFFF` | cards, inputs |
-| `border` | `#E5E5E5` | dividers, input borders |
-| `text-primary` | `#0A0A0A` | body, headings |
-| `text-muted` | `#737373` | labels, hints, timestamps |
-| `accent` | `#4F46E5` | primary CTA, focus ring (indigo-600) |
-| `accent-hover` | `#4338CA` | hover state |
-| `success` | `#16A34A` | paid badge, confirmation |
-| `warning` | `#D97706` | pending badge |
-| `danger` | `#DC2626` | failed badge, cancel link |
+
+| Token          | Hex       | Use                                  |
+| -------------- | --------- | ------------------------------------ |
+| `bg`           | `#FAFAFA` | page background                      |
+| `surface`      | `#FFFFFF` | cards, inputs                        |
+| `border`       | `#E5E5E5` | dividers, input borders              |
+| `text-primary` | `#0A0A0A` | body, headings                       |
+| `text-muted`   | `#737373` | labels, hints, timestamps            |
+| `accent`       | `#4F46E5` | primary CTA, focus ring (indigo-600) |
+| `accent-hover` | `#4338CA` | hover state                          |
+| `success`      | `#16A34A` | paid badge, confirmation             |
+| `warning`      | `#D97706` | pending badge                        |
+| `danger`       | `#DC2626` | failed badge, cancel link            |
 
 ### Dark mode
-| Token | Hex |
-|---|---|
-| `bg` | `#0A0A0A` |
-| `surface` | `#171717` |
-| `border` | `#262626` |
+
+| Token          | Hex       |
+| -------------- | --------- |
+| `bg`           | `#0A0A0A` |
+| `surface`      | `#171717` |
+| `border`       | `#262626` |
 | `text-primary` | `#FAFAFA` |
-| `text-muted` | `#A3A3A3` |
-| `accent` | `#6366F1` |
+| `text-muted`   | `#A3A3A3` |
+| `accent`       | `#6366F1` |
 | `accent-hover` | `#818CF8` |
-| `success` | `#22C55E` |
-| `warning` | `#F59E0B` |
-| `danger` | `#EF4444` |
+| `success`      | `#22C55E` |
+| `warning`      | `#F59E0B` |
+| `danger`       | `#EF4444` |
 
 All foreground/background pairs meet WCAG AA (≥4.5:1 for body, ≥3:1 for large text).
 
@@ -68,16 +70,16 @@ All foreground/background pairs meet WCAG AA (≥4.5:1 for body, ≥3:1 for larg
 
 Components installed via `pnpm dlx shadcn-svelte@latest add <name>`. Files land in `src/lib/components/ui/<name>/`.
 
-| Pattern | shadcn-svelte component |
-|---|---|
-| Primary / ghost button | `Button` (variant `default` / `ghost`) |
-| Amount input | `Input` (with `Label`) |
-| Card container | `Card` (`Card.Root` / `Card.Header` / `Card.Content` / `Card.Footer`) |
-| Status badge | `Badge` (variant custom: pending/paid/failed) |
-| Toast on copy / cancel | `Sonner` (svelte-sonner) |
-| Cancel confirm | `AlertDialog` |
-| Skeleton while QR fetches | `Skeleton` |
-| Inline code | custom `<code>` styled per tokens |
+| Pattern                   | shadcn-svelte component                                               |
+| ------------------------- | --------------------------------------------------------------------- |
+| Primary / ghost button    | `Button` (variant `default` / `ghost`)                                |
+| Amount input              | `Input` (with `Label`)                                                |
+| Card container            | `Card` (`Card.Root` / `Card.Header` / `Card.Content` / `Card.Footer`) |
+| Status badge              | `Badge` (variant custom: pending/paid/failed)                         |
+| Toast on copy / cancel    | `Sonner` (svelte-sonner)                                              |
+| Cancel confirm            | `AlertDialog`                                                         |
+| Skeleton while QR fetches | `Skeleton`                                                            |
+| Inline code               | custom `<code>` styled per tokens                                     |
 
 Dark mode via `mode-watcher` (shadcn-svelte standard). Icons via `lucide-svelte`.
 

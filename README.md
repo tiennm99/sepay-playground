@@ -47,15 +47,15 @@ pnpm dev
 
 ### Env vars
 
-| Name | Where | Notes |
-|---|---|---|
-| `SEPAY_WEBHOOK_API_KEY` | SePay dashboard | Compared via `crypto.timingSafeEqual` against `Authorization: Apikey …` |
-| `SEPAY_ACCOUNT_NUMBER` | SePay-linked bank account | Embedded in QR URL |
-| `SEPAY_BANK_CODE` | `https://qr.sepay.vn/banks.json` | Either short name (`Vietcombank`) or code (`VCB`) |
-| `SEPAY_ORDER_PREFIX` | Must match **SePay dashboard → Company Settings → General Configuration** | `SEVQR` works for VietinBank |
-| `UPSTASH_REDIS_REST_URL` | Upstash console | Auto-loaded by `Redis.fromEnv()` |
-| `UPSTASH_REDIS_REST_TOKEN` | Upstash console | Same |
-| `DEV_SIMULATE_TOKEN` | Local-only | Random string; required header for `/api/dev/simulate-webhook` |
+| Name                       | Where                                                                     | Notes                                                                   |
+| -------------------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `SEPAY_WEBHOOK_API_KEY`    | SePay dashboard                                                           | Compared via `crypto.timingSafeEqual` against `Authorization: Apikey …` |
+| `SEPAY_ACCOUNT_NUMBER`     | SePay-linked bank account                                                 | Embedded in QR URL                                                      |
+| `SEPAY_BANK_CODE`          | `https://qr.sepay.vn/banks.json`                                          | Either short name (`Vietcombank`) or code (`VCB`)                       |
+| `SEPAY_ORDER_PREFIX`       | Must match **SePay dashboard → Company Settings → General Configuration** | `SEVQR` works for VietinBank                                            |
+| `UPSTASH_REDIS_REST_URL`   | Upstash console                                                           | Auto-loaded by `Redis.fromEnv()`                                        |
+| `UPSTASH_REDIS_REST_TOKEN` | Upstash console                                                           | Same                                                                    |
+| `DEV_SIMULATE_TOKEN`       | Local-only                                                                | Random string; required header for `/api/dev/simulate-webhook`          |
 
 ### Local webhook delivery
 

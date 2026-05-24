@@ -5,16 +5,19 @@
 **Endpoint:** `https://qr.sepay.vn/img`
 
 **Required Query Parameters:**
+
 - `acc`: Bank account/virtual account number
 - `bank`: Bank code or short name (from `qr.sepay.vn/banks.json`)
 
 **Optional Parameters:**
+
 - `amount`: Transfer amount in VND
 - `des`: Transfer memo/description (this is where order codes embed)
 - `template`: Display style (`default`, `compact`, `qronly`). Defaults to full QR.
 - `download`: Set to `true` to force download instead of inline display
 
 **Example:**
+
 ```
 https://qr.sepay.vn/img?acc=0010000000355&bank=Vietcombank&amount=100000&des=ORDER123
 ```
@@ -29,22 +32,23 @@ https://qr.sepay.vn/img?acc=0010000000355&bank=Vietcombank&amount=100000&des=ORD
 
 ```json
 {
-  "id": 92704,
-  "gateway": "Vietcombank",
-  "transactionDate": "2023-03-25 14:02:37",
-  "accountNumber": "0123499999",
-  "code": "ORDER123",
-  "content": "transfer to buy iphone",
-  "transferType": "in",
-  "transferAmount": 2277000,
-  "accumulated": 19077000,
-  "subAccount": null,
-  "referenceCode": "MBVCB.3278907687",
-  "description": ""
+	"id": 92704,
+	"gateway": "Vietcombank",
+	"transactionDate": "2023-03-25 14:02:37",
+	"accountNumber": "0123499999",
+	"code": "ORDER123",
+	"content": "transfer to buy iphone",
+	"transferType": "in",
+	"transferAmount": 2277000,
+	"accumulated": 19077000,
+	"subAccount": null,
+	"referenceCode": "MBVCB.3278907687",
+	"description": ""
 }
 ```
 
 **Field Mapping:**
+
 - `id`: Unique transaction ID (use for deduplication)
 - `code`: **Extracted** order code (auto-matched by SePay config; can be `null`)
 - `content`: Raw transfer memo from bank (source for manual extraction)
@@ -53,6 +57,7 @@ https://qr.sepay.vn/img?acc=0010000000355&bank=Vietcombank&amount=100000&des=ORD
 - `accumulated`: Account balance after transfer
 
 **Which field for order matching?**
+
 - Prefer `code` if configured in dashboard to auto-extract (more reliable)
 - Fall back to `content` if `code` is `null` (use pattern matching)
 
@@ -65,16 +70,19 @@ https://qr.sepay.vn/img?acc=0010000000355&bank=Vietcombank&amount=100000&des=ORD
 **Method:** API Key in `Authorization` header
 
 **Header Format:**
+
 ```
 Authorization: Apikey YOUR_SEPAY_API_KEY
 ```
 
 **Configuration:**
+
 - Generate/retrieve key from **SePay Dashboard → Settings → API Keys** (exact location unconfirmed in docs)
 - Laravel package refers to this as **webhook token** in `.env`
 - No additional signature validation required if using API Key auth
 
 **Alternative Auth Methods (optional):**
+
 - HMAC-SHA256 signature in header
 - OAuth 2.0 tokens
 - No auth (not recommended for production)
@@ -88,6 +96,7 @@ Authorization: Apikey YOUR_SEPAY_API_KEY
 **Configuration Location:** Dashboard → Company Settings → General Configuration
 
 **Extraction Rules:**
+
 - **Pattern prefix:** Configurable in SePay dashboard (e.g., `SE`, `SEVQR`, `SEPAY`, or custom)
 - **Default pattern:** Often `SE` (seen in Laravel implementation)
 - **Format:** Prefix + alphanumeric code in transfer `content` field
@@ -96,11 +105,13 @@ Authorization: Apikey YOUR_SEPAY_API_KEY
   - Transfer memo: `"PAYOrder789"` → extracted `code: "789"` (if `PAY` configured)
 
 **VietinBank Special Rule:**
+
 - Requires memo format: `"SEVQR" + transfer_content` for QR transfers
 
 **Webhook Field:** Auto-extracted code appears in `code` field (null if no match)
 
 **Manual Extraction Fallback:**
+
 - If `code` is null, regex-parse `content` field using dashboard-configured pattern
 
 **Sources:** [SePay Webhook Integration](https://docs.sepay.vn/tich-hop-webhooks.html), [Laravel SePay Implementation](https://github.com/sepayvn/laravel-sepay)
@@ -110,11 +121,13 @@ Authorization: Apikey YOUR_SEPAY_API_KEY
 ## 5. Webhook Retries & Idempotency
 
 **Retry Behavior:**
+
 - **Failed webhooks:** Auto-retry up to **7 times** over max **5-hour window**
 - **Retry interval:** Fibonacci-spaced delays
 - **Success criteria:** HTTP 200/201 + JSON body `{"success": true}` within 30 seconds
 
 **Deduplication (CRITICAL):**
+
 - **Stable ID:** `id` field is immutable per transaction and remains constant across all retries
 - **Dedup strategy:**
   - Create `UNIQUE` constraint on `(gateway, transactionDate, accountNumber, transferAmount)` or just `id`
@@ -122,6 +135,7 @@ Authorization: Apikey YOUR_SEPAY_API_KEY
   - Use `INSERT IGNORE` or conditional insert to prevent race conditions
 
 **Guaranteed Dedup:**
+
 - Store processed `id` values in database with expiration >= 5 hours
 - Check at transaction-start before queuing business logic
 
@@ -134,36 +148,39 @@ Authorization: Apikey YOUR_SEPAY_API_KEY
 **Canonical List:** `https://qr.sepay.vn/banks.json` (JSON array of bank objects)
 
 **JSON Structure (inferred):**
+
 ```json
 [
-  {
-    "code": "ACB",
-    "bin": "970416",
-    "shortName": "ACB",
-    "name": "Asia Commercial Bank"
-  },
-  {
-    "code": "VCB",
-    "shortName": "Vietcombank",
-    "name": "Ngân hàng TMCP Ngoại Thương Việt Nam"
-  },
-  {
-    "code": "MB",
-    "shortName": "MBBank",
-    "name": "Ngân hàng TMCP Quân Đội"
-  }
+	{
+		"code": "ACB",
+		"bin": "970416",
+		"shortName": "ACB",
+		"name": "Asia Commercial Bank"
+	},
+	{
+		"code": "VCB",
+		"shortName": "Vietcombank",
+		"name": "Ngân hàng TMCP Ngoại Thương Việt Nam"
+	},
+	{
+		"code": "MB",
+		"shortName": "MBBank",
+		"name": "Ngân hàng TMCP Quân Đội"
+	}
 ]
 ```
 
 **Parameter Acceptance:** QR endpoint accepts either `code` or `shortName` in `bank` param
 
 **Common Banks (examples):**
+
 - `Vietcombank` (short name)
 - `ACB` (code)
 - `MBBank` (short name)
 - `VietinBank`, `BIDV`, `HDBank`, `Techcombank`, `SHB`, `OCB`, `KienLongBank`, `MSB`
 
 **Bank-Specific Rules:**
+
 - **OCB, KienLongBank, MSB:** Require virtual accounts
 - **VietinBank:** Personal/business transfers require `SEVQR` prefix in memo
 

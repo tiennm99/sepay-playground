@@ -1,6 +1,6 @@
 ---
-title: "SePay VietQR demo playground — implementation plan"
-description: "SvelteKit 2 + Svelte 5 runes demo: order form → QR awaiting (poll) → paid, backed by Upstash Redis + SePay webhook with dev simulator."
+title: 'SePay VietQR demo playground — implementation plan'
+description: 'SvelteKit 2 + Svelte 5 runes demo: order form → QR awaiting (poll) → paid, backed by Upstash Redis + SePay webhook with dev simulator.'
 status: pending
 priority: P2
 effort: 6h
@@ -124,14 +124,14 @@ pnpm add mode-watcher lucide-svelte
 
 ## Risk register
 
-| Risk | Likelihood | Impact | Mitigation |
-|---|---|---|---|
-| shadcn-svelte init overwrites our `app.css` tokens | M | M | Run init first (Phase 3), then append `@theme` block; commit before token edits |
-| Webhook dedup race (two retries arrive within ms) | L | H | `set nx` is atomic in Redis — only first call returns OK |
-| SePay sends `code: null` (auto-extract misconfigured) | M | M | Fallback regex on `content`; log + return 200 (no retry storm) |
-| Polling never stops if user leaves tab | L | L | `$effect` cleanup on unmount; also stop after 15-min expiry |
-| Dev simulator reachable in prod | L | H | Guard `import.meta.env.PROD` at top of handler; also smoke-test against `pnpm build && pnpm preview` |
-| Tailwind v4 `@theme` syntax drift | L | M | Pin `tailwindcss@^4.0` in package.json; doc inline `@theme` reference |
+| Risk                                                  | Likelihood | Impact | Mitigation                                                                                           |
+| ----------------------------------------------------- | ---------- | ------ | ---------------------------------------------------------------------------------------------------- |
+| shadcn-svelte init overwrites our `app.css` tokens    | M          | M      | Run init first (Phase 3), then append `@theme` block; commit before token edits                      |
+| Webhook dedup race (two retries arrive within ms)     | L          | H      | `set nx` is atomic in Redis — only first call returns OK                                             |
+| SePay sends `code: null` (auto-extract misconfigured) | M          | M      | Fallback regex on `content`; log + return 200 (no retry storm)                                       |
+| Polling never stops if user leaves tab                | L          | L      | `$effect` cleanup on unmount; also stop after 15-min expiry                                          |
+| Dev simulator reachable in prod                       | L          | H      | Guard `import.meta.env.PROD` at top of handler; also smoke-test against `pnpm build && pnpm preview` |
+| Tailwind v4 `@theme` syntax drift                     | L          | M      | Pin `tailwindcss@^4.0` in package.json; doc inline `@theme` reference                                |
 
 ## Rollback per phase
 
@@ -139,35 +139,35 @@ Each phase = one commit. `git revert <hash>` undoes it without cascade because: 
 
 ## File ownership (no overlap)
 
-| Phase | Files exclusively owned |
-|---|---|
-| 1 | `package.json`, `pnpm-lock.yaml`, `.npmrc`, `svelte.config.js` (initial), `vite.config.js` |
-| 2 | `svelte.config.js` (final), `.env.example`, `jsconfig.json`, `src/lib/types.js` |
-| 3 | `src/app.css`, `src/app.html`, `src/lib/components/ui/**`, `src/routes/+layout.svelte` (initial) |
-| 4 | `src/lib/server/{redis,orders,sepay}.js` |
-| 5 | `src/routes/api/**` |
-| 6 | `src/routes/pay/+page.{svelte,server.js}` |
-| 7 | `src/lib/components/Pay{Form,Awaiting,Paid}.svelte`, `src/routes/+page.svelte`, `src/routes/+layout.svelte` (final) |
-| 8 | `README.md`, `.gitignore` |
+| Phase | Files exclusively owned                                                                                             |
+| ----- | ------------------------------------------------------------------------------------------------------------------- |
+| 1     | `package.json`, `pnpm-lock.yaml`, `.npmrc`, `svelte.config.js` (initial), `vite.config.js`                          |
+| 2     | `svelte.config.js` (final), `.env.example`, `jsconfig.json`, `src/lib/types.js`                                     |
+| 3     | `src/app.css`, `src/app.html`, `src/lib/components/ui/**`, `src/routes/+layout.svelte` (initial)                    |
+| 4     | `src/lib/server/{redis,orders,sepay}.js`                                                                            |
+| 5     | `src/routes/api/**`                                                                                                 |
+| 6     | `src/routes/pay/+page.{svelte,server.js}`                                                                           |
+| 7     | `src/lib/components/Pay{Form,Awaiting,Paid}.svelte`, `src/routes/+page.svelte`, `src/routes/+layout.svelte` (final) |
+| 8     | `README.md`, `.gitignore`                                                                                           |
 
 ## Test matrix (manual smoke for demo — no test framework added)
 
-| # | Scenario | Steps | Expected |
-|---|---|---|---|
-| 1 | Landing renders | `pnpm dev` → open `/` | Header + intro + "Open /pay" button |
-| 2 | Form validation | `/pay`, submit empty/0/non-numeric | Inline error, no redirect |
-| 3 | Order creation | `/pay`, amount 10000, submit | Redirects to `/pay?code=SE...`, shows awaiting state, QR image loads from `qr.sepay.vn` |
-| 4 | Redis state | `redis-cli` (or Upstash console) `GET order:<code>` | JSON with `status:"pending"` |
-| 5 | Polling | Leave awaiting tab open | Network panel shows `GET /api/orders/<code>` every 2s |
-| 6 | Dev simulator path | `curl -X POST /api/dev/simulate-webhook -d '{"code":"<code>"}'` | Returns 200; awaiting tab flips to paid within 2s |
-| 7 | Webhook auth | `curl -X POST /api/webhooks/sepay -d '{}'` (no header) | 401 |
-| 8 | Webhook dedup | Replay same payload (same `id`) twice | Both return 200; order updated once |
-| 9 | Webhook unmatched | Send payload with `code:null`, content with no prefix match | 200 `{unmatched:true}`; no order touched |
-| 10 | Outgoing transfer ignored | `transferType:"out"` payload | 200; no order touched |
-| 11 | Prod guard | `pnpm build && pnpm preview`, hit `/api/dev/simulate-webhook` | 404 |
-| 12 | Dark mode | Toggle via mode-watcher / OS | Tokens swap; contrast preserved |
-| 13 | Reduced motion | OS setting → reduce | No fade transitions on state swap |
-| 14 | Real webhook (ngrok) | `ngrok http 5173`, set SePay dashboard URL, do 10k VND test transfer | Awaiting → paid in <5s |
+| #   | Scenario                  | Steps                                                                | Expected                                                                                |
+| --- | ------------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| 1   | Landing renders           | `pnpm dev` → open `/`                                                | Header + intro + "Open /pay" button                                                     |
+| 2   | Form validation           | `/pay`, submit empty/0/non-numeric                                   | Inline error, no redirect                                                               |
+| 3   | Order creation            | `/pay`, amount 10000, submit                                         | Redirects to `/pay?code=SE...`, shows awaiting state, QR image loads from `qr.sepay.vn` |
+| 4   | Redis state               | `redis-cli` (or Upstash console) `GET order:<code>`                  | JSON with `status:"pending"`                                                            |
+| 5   | Polling                   | Leave awaiting tab open                                              | Network panel shows `GET /api/orders/<code>` every 2s                                   |
+| 6   | Dev simulator path        | `curl -X POST /api/dev/simulate-webhook -d '{"code":"<code>"}'`      | Returns 200; awaiting tab flips to paid within 2s                                       |
+| 7   | Webhook auth              | `curl -X POST /api/webhooks/sepay -d '{}'` (no header)               | 401                                                                                     |
+| 8   | Webhook dedup             | Replay same payload (same `id`) twice                                | Both return 200; order updated once                                                     |
+| 9   | Webhook unmatched         | Send payload with `code:null`, content with no prefix match          | 200 `{unmatched:true}`; no order touched                                                |
+| 10  | Outgoing transfer ignored | `transferType:"out"` payload                                         | 200; no order touched                                                                   |
+| 11  | Prod guard                | `pnpm build && pnpm preview`, hit `/api/dev/simulate-webhook`        | 404                                                                                     |
+| 12  | Dark mode                 | Toggle via mode-watcher / OS                                         | Tokens swap; contrast preserved                                                         |
+| 13  | Reduced motion            | OS setting → reduce                                                  | No fade transitions on state swap                                                       |
+| 14  | Real webhook (ngrok)      | `ngrok http 5173`, set SePay dashboard URL, do 10k VND test transfer | Awaiting → paid in <5s                                                                  |
 
 ## Open questions
 
@@ -198,6 +198,7 @@ pnpm build && pnpm preview
 ```
 
 Sources verified during planning:
+
 - [sv create — Svelte CLI Docs](https://svelte.dev/docs/cli/sv-create)
 - [shadcn-svelte SvelteKit install](https://www.shadcn-svelte.com/docs/installation/sveltekit)
 - [shadcn-svelte Tailwind v4 migration](https://www.shadcn-svelte.com/docs/migration/tailwind-v4)
