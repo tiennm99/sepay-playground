@@ -1,9 +1,10 @@
 import { customAlphabet } from 'nanoid';
-import { redis } from './redis.js';
+import { getRedis, pkey } from './redis.js';
 import { SEPAY_ORDER_PREFIX } from '$env/static/private';
 
 const ORDER_TTL_SECONDS = 60 * 60 * 24; // 24h — demo only
 const ORDER_KEY = (/** @type {string} */ code) => `order:${code}`;
+const WEBHOOK_KEY = (/** @type {string|number} */ id) => `webhook:${id}`;
 
 // Alphanumeric uppercase — no dashes, no ambiguous chars.
 // 6 chars × 32 alphabet = ~1B codes; collision retry below covers the rare clash.
@@ -20,6 +21,7 @@ export async function createOrder({ amount }) {
 		throw new Error('amount must be an integer between 1,000 and 50,000,000 VND');
 	}
 
+	const h = getRedis();
 	// Retry on collision (NX returns null on existing key).
 	for (let attempt = 0; attempt < 3; attempt++) {
 		const code = `${PREFIX}${codeBody()}`;
@@ -30,7 +32,10 @@ export async function createOrder({ amount }) {
 			status: 'pending',
 			createdAt: new Date().toISOString()
 		};
-		const set = await redis.set(ORDER_KEY(code), order, { nx: true, ex: ORDER_TTL_SECONDS });
+		const set = await h.client.set(pkey(h, ORDER_KEY(code)), order, {
+			nx: true,
+			ex: ORDER_TTL_SECONDS
+		});
 		if (set === 'OK') return order;
 	}
 	throw new Error('failed to mint a unique order code after 3 attempts');
@@ -41,7 +46,8 @@ export async function createOrder({ amount }) {
  * @returns {Promise<import('$lib/types.js').Order | null>}
  */
 export async function getOrder(code) {
-	return /** @type {any} */ (await redis.get(ORDER_KEY(code)));
+	const h = getRedis();
+	return /** @type {any} */ (await h.client.get(pkey(h, ORDER_KEY(code))));
 }
 
 /**
@@ -57,7 +63,8 @@ export async function markPaid(code, { paidAt, txReference }) {
 	if (!current) return null;
 	if (current.status === 'paid') return current;
 	const updated = { ...current, status: 'paid', paidAt, txReference };
-	await redis.set(ORDER_KEY(code), updated, { keepTtl: true });
+	const h = getRedis();
+	await h.client.set(pkey(h, ORDER_KEY(code)), updated, { keepTtl: true });
 	return updated;
 }
 
@@ -69,6 +76,10 @@ export async function markPaid(code, { paidAt, txReference }) {
  * @returns {Promise<boolean>}
  */
 export async function claimWebhookId(id) {
-	const set = await redis.set(`webhook:${id}`, '1', { nx: true, ex: 60 * 60 * 24 * 7 });
+	const h = getRedis();
+	const set = await h.client.set(pkey(h, WEBHOOK_KEY(id)), '1', {
+		nx: true,
+		ex: 60 * 60 * 24 * 7
+	});
 	return set === 'OK';
 }
