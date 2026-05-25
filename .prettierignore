@@ -8,3 +8,6 @@ pnpm-lock.yaml
 
 # Wireframes — preserved verbatim from design phase
 docs/wireframe
+
+# Plans + agent-authored reports — preserved verbatim, varying authors
+plans
