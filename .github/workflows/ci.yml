@@ -13,32 +13,32 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v5
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
+      - name: Enable corepack
+        run: corepack enable
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v5
         with:
           node-version: 24
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: format
+      - name: Format
         run: pnpm format:check
 
-      - name: svelte-check
+      - name: Svelte check
         run: pnpm check
 
-      - name: build
+      - name: Build
         run: pnpm build
         env:
           SEPAY_WEBHOOK_API_KEY: ci-placeholder
           SEPAY_ACCOUNT_NUMBER: '0010000000000'
           SEPAY_BANK_CODE: Vietcombank
           SEPAY_ORDER_PREFIX: SEVQR
-          UPSTASH_REDIS_REST_URL: https://example.upstash.io
-          UPSTASH_REDIS_REST_TOKEN: ci-placeholder
           DEV_SIMULATE_TOKEN: ci-placeholder
